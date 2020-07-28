@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FF141318">
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="10"
+        app:layout_constraintBottom_toTopOf="@+id/commentSection_recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/commentsBackBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp" />
+        <TextView
+            android:id="@+id/commentLayoutHeading"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:layout_margin="10dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:fontFamily="@font/open_sans"
+            android:textSize="15sp"
+            android:text="73 Comments"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commentSection_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:weightSum="10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="#212027">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/addCommentEditText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8.5"
+            android:fontFamily="@font/open_sans"
+            android:layout_margin="10dp"
+            android:paddingLeft="20dp"
+            android:hint="Add Comment"
+            android:textColorHint="#B3A5A5"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:background="#FF141318"
+            android:gravity="center_vertical"
+            />
+
+        <Button
+            android:id="@+id/addCommentAddBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1.5"
+            android:background="@color/transparent"
+            android:fontFamily="@font/open_sans"
+            android:gravity="center"
+            android:text="Send"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textColor="#B3A5A5"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

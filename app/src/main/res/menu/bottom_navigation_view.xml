@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_home"
+        android:title="@string/home"
+        android:icon="@drawable/unchecked_home"
+        />
+    <item android:id="@+id/nav_Explore"
+        android:title="@string/Explore"
+        android:icon="@drawable/unchecked_explore_btn"/>
+    <item android:id="@+id/nav_Add"
+        android:title=""
+        android:icon="@drawable/bottom_nav_add" />
+    <item android:id="@+id/nav_Notification"
+        android:title="@string/Notification"
+        android:icon="@drawable/unchecked_notification"/>
+    <item android:id="@+id/nav_Me"
+        android:title="@string/Me"
+        android:icon="@drawable/unchecked_account_btn"/>
+</menu>
