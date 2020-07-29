@@ -162,6 +162,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout7"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="15dp"
@@ -193,4 +194,28 @@
             android:textSize="15sp" />
 
     </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/fProfile_navView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        app:itemTextAppearanceActive="@style/item_Selected"
+        app:itemTextAppearanceInactive="@style/item_unSelected"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
+        app:menu="@menu/f_profile_menu"
+        app:itemTextColor="@color/bottom_navigation_color"
+        app:elevation="0dp"/>
+
+    <FrameLayout
+        android:id="@+id/fProfile_frameHolder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fProfile_navView"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

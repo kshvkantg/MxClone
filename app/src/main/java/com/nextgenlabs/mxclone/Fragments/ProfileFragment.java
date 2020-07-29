@@ -2,12 +2,15 @@ package com.nextgenlabs.mxclone.Fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.nextgenlabs.mxclone.R;
 
 /**
@@ -59,8 +62,28 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        BottomNavigationView navigationView = view.findViewById(R.id.fProfile_navView);
+        VideoFragment videoFragment = new VideoFragment();
+        getChildFragmentManager().beginTransaction().replace(R.id.fProfile_frameHolder,videoFragment).addToBackStack(null).commit();
+        navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment selected = new VideoFragment();
+                switch (item.getItemId()) {
+                    case R.id.nav_videos:
+                        selected = new VideoFragment();
+                        break;
+                    case R.id.nav_Likes:
+                        selected = new LikeFragment();
+                        break;
+                }
+                getChildFragmentManager().beginTransaction().replace(R.id.fProfile_frameHolder,selected);
+                return true;
+            }
+        });
+        return view;
     }
 }

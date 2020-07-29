@@ -13,6 +13,7 @@
         android:textAlignment="viewStart"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:padding="15dp"/>
 
 </androidx.appcompat.widget.Toolbar>
