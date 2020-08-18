@@ -65,4 +65,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/fHome_upperNav"
         app:srcCompat="@drawable/menu_share" />
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="7dp"
+        android:background="#40FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fHome_appShareBtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

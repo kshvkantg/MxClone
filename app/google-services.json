@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "405615087157",
+    "firebase_url": "https://mxclone-c8c5c.firebaseio.com",
+    "project_id": "mxclone-c8c5c",
+    "storage_bucket": "mxclone-c8c5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:405615087157:android:67e11dfffdb99fe61e6b7c",
+        "android_client_info": {
+          "package_name": "com.nextgenlabs.mxclone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "405615087157-1ah0323ebj25hikv9qjpc04anrnl62d3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDS-nDUJOJdqPjPJhokYR1LrEKHtz8PSSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "405615087157-1ah0323ebj25hikv9qjpc04anrnl62d3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -88,7 +88,7 @@
         android:layout_marginTop="20dp"
         android:fontFamily="@font/open_sans"
         android:gravity="start"
-        android:text="@string/sample_profile_name"
+        android:text=""
         android:textAlignment="textStart"
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -105,10 +105,10 @@
         android:layout_marginTop="5dp"
         android:fontFamily="@font/open_sans"
         android:gravity="start"
-        android:text="TextView"
+        android:text=""
         android:textAlignment="textStart"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:textStyle="normal"
         app:layout_constraintStart_toEndOf="@+id/fProfile_ID"
         app:layout_constraintTop_toBottomOf="@+id/fProfile_name" />
@@ -123,7 +123,7 @@
         android:text="ID:"
         android:textAlignment="textStart"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="normal"
         app:layout_constraintStart_toStartOf="@+id/fProfile_name"
         app:layout_constraintTop_toBottomOf="@+id/fProfile_name" />
@@ -139,15 +139,16 @@
         app:layout_constraintTop_toBottomOf="@+id/fProfile_idContext">
 
         <TextView
+            android:id="@+id/fProfile_following"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="6"
             android:gravity="center"
-            android:text="5"
+            android:text=""
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold" />
+            android:textSize="20sp"
+            android:textStyle="normal" />
 
         <TextView
             android:layout_width="match_parent"
@@ -173,17 +174,19 @@
         app:layout_constraintTop_toTopOf="@+id/linearLayout6">
 
         <TextView
+            android:id="@+id/fProfile_followers"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="6"
             android:gravity="center"
-            android:text="12"
+            android:text=""
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold" />
+            android:textSize="20sp"
+            android:textStyle="normal" />
 
         <TextView
+
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"

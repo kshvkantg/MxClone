@@ -6,9 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.nextgenlabs.mxclone.R;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +18,6 @@ public class CommentSectionAdapter extends RecyclerView.Adapter<CommentSectionAd
         return new CommentViewHolder(view);
     }
 
-    @Override
     public void onBindViewHolder(@NonNull final CommentViewHolder holder, int position) {
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override

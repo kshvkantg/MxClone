@@ -1,6 +1,7 @@
 package com.nextgenlabs.mxclone.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -18,6 +19,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
 import com.google.firebase.FirebaseException;
@@ -28,10 +31,20 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
 import com.nextgenlabs.mxclone.MainActivity;
+import com.nextgenlabs.mxclone.Model.InitialTableModel;
 import com.nextgenlabs.mxclone.R;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class VerifyLoginActivity extends AppCompatActivity {
@@ -83,11 +96,16 @@ public class VerifyLoginActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+        public void onVerificationCompleted(@NonNull final PhoneAuthCredential phoneAuthCredential) {
             String phoneCode = phoneAuthCredential.getSmsCode();
             if (phoneCode != null){
                 codeEt.setText(phoneCode);
-                signInWithPhoneAuthCredential(phoneAuthCredential);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        signInWithPhoneAuthCredential(phoneAuthCredential);
+                    }
+                });
             }
         }
 
@@ -124,9 +142,7 @@ public class VerifyLoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
-                            Intent intent = new Intent(context, MainActivity.class);
-                            startActivity(intent);
-
+                            setInitialTable(user);
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
@@ -136,6 +152,51 @@ public class VerifyLoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    public final void setInitialTable(final FirebaseUser user){
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference doc = db.collection("userProfiles").document(user.getPhoneNumber() + "_");
+        db.runTransaction(new Transaction.Function<Void>() {
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(doc);
+                if(!snapshot.exists()){
+                    Map<String, Object> map = new HashMap<>();
+
+                    map.put("phone",user.getPhoneNumber());
+                    map.put("profileSet",false);
+
+                    db.collection("userProfiles").document(user.getPhoneNumber() + "_").set(map)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    startActivity(new Intent(VerifyLoginActivity.this, SetDetails.class));
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+                }
+                else {
+                    startActivity(new Intent(VerifyLoginActivity.this,MainActivity.class));
+                }
+                return null;
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
 }

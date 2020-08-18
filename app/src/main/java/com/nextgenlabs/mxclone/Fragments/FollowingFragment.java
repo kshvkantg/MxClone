@@ -11,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nextgenlabs.mxclone.Model.PostModel;
 import com.nextgenlabs.mxclone.R;
 import com.nextgenlabs.mxclone.adapters.HomeViewAdapter;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +24,7 @@ import com.nextgenlabs.mxclone.adapters.HomeViewAdapter;
  */
 public class FollowingFragment extends Fragment {
 
+    ArrayList<PostModel> arrayList = new ArrayList<>();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -67,9 +71,9 @@ public class FollowingFragment extends Fragment {
         // Inflate the layout for this fragment
         Context context = getContext();
         View view = inflater.inflate(R.layout.fragment_following, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.fFollowing_recyclerView);
-        recyclerView.setAdapter(new HomeViewAdapter(context));
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+//        RecyclerView recyclerView = view.findViewById(R.id.fFollowing_recyclerView);
+//        recyclerView.setAdapter(new HomeViewAdapter(arrayList,context));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         return view;
     }
 }

@@ -3,15 +3,39 @@ package com.nextgenlabs.mxclone.Fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 import com.nextgenlabs.mxclone.R;
+
+import org.w3c.dom.Document;
+
+import java.net.URI;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,7 +43,7 @@ import com.nextgenlabs.mxclone.R;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
-
+    private static final String TAG = "ProfileFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -84,6 +108,37 @@ public class ProfileFragment extends Fragment {
                 return true;
             }
         });
+        setDetails(view);
         return view;
+    }
+
+    public static void setDetails(View view){
+        final TextView name = view.findViewById(R.id.fProfile_name);
+        final TextView UniqueId = view.findViewById(R.id.fProfile_idContext);
+        final TextView followers = view.findViewById(R.id.fProfile_followers);
+        final TextView following = view.findViewById(R.id.fProfile_following);
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final DocumentReference doc = db.collection("userProfiles").document(user.getPhoneNumber() + "_");
+
+//        doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                DocumentSnapshot snapshot = task.getResult();
+//
+//            }
+//        });
+
+        doc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                assert snapshot != null;
+                name.setText( snapshot.getString("name"));
+                UniqueId.setText(snapshot.getString("uniqueId"));
+                followers.setText(snapshot.get("followers").toString());
+                following.setText(snapshot.get("following").toString());
+            }
+        });
     }
 }

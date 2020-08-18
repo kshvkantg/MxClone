@@ -1,13 +1,13 @@
 package com.nextgenlabs.mxclone.Fragments;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +15,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
+import com.nextgenlabs.mxclone.Model.PostModel;
 import com.nextgenlabs.mxclone.R;
+import com.nextgenlabs.mxclone.adapters.HomeViewAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +38,7 @@ import com.nextgenlabs.mxclone.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+    private static final String TAG = "HomeFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -83,13 +98,16 @@ public class HomeFragment extends Fragment {
                 Fragment selected = new TrendingFragment();
                 switch (item.getItemId()){
                     case R.id.nav_trending:
-                        selected = new TrendingFragment();
+                        selected = new TrendingFragment ();
                         break;
                     case R.id.nav_following:
                         selected = new FollowingFragment();
                         break;
                 }
+
                 childFragManager.replace(R.id.fHome_frameHolder,selected);
+                childFragManager.add(R.id.fHome_frameHolder,selected);
+
                 childFragManager.addToBackStack(null);
                 Log.e("HomeFragReport",""+ selected);
                 return true;
@@ -97,4 +115,6 @@ public class HomeFragment extends Fragment {
         });
        return view;
     }
+
+
 }
