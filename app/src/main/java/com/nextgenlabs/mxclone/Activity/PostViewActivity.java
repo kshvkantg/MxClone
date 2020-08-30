@@ -6,18 +6,34 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,10 +49,18 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.nextgenlabs.mxclone.R;
 
+import java.io.File;
 import java.net.URL;
 
 public class PostViewActivity extends AppCompatActivity {
     private static final String TAG = "PostViewActivity";
+    String path;
+    private PlayerView videoView;
+    private SimpleExoPlayer player;
+    private boolean playWhenReady = true;
+    private int currentWindow = 0;
+    private long playbackPosition = 0;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,52 +74,10 @@ public class PostViewActivity extends AppCompatActivity {
         TextView song = findViewById(R.id.aPostView_musicName);
         song.setSelected(true);
 
-        final VideoView videoView = findViewById(R.id.aPostView_videoView);
+        videoView = findViewById(R.id.aPostView_videoView);
 
         Intent intent = getIntent();
-        final String path = intent.getStringExtra("path");
-        if(path != null) {
-            FirebaseStorage storageRef = FirebaseStorage.getInstance();
-            StorageReference videoRef = storageRef.getReference().child(path);
-            final Uri[] data = new Uri[1];
-            videoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                   MediaController mediaController = new MediaController(PostViewActivity.this);
-                   mediaController.setAnchorView(videoView);
-                   videoView.setMediaController(mediaController);
-                   videoView.setVideoURI(uri);
-
-                   videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                       @Override
-                       public void onPrepared(MediaPlayer mp) {
-                           mp.setLooping(true);
-                           videoView.start();
-                       }
-                   });
-                    Log.i(TAG, "previous onSuccess: "+uri);
-                }
-            });
-//            videoRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-//                @Override
-//                public void onComplete(@NonNull Task<Uri> task) {
-//                    task.addOnCompleteListener(new OnCompleteListener<Uri>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Uri> task) {
-//                            videoView.setVideoURI(data[0]);
-//                            Log.i(TAG, "onSuccess: Video Uri creation" + data[0]);
-//                            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                                @Override
-//                                public void onPrepared(MediaPlayer mp) {
-//                                    mp.setLooping(true);
-//                                    videoView.start();
-//                                }
-//                            });
-//                        }
-//                    });
-//                }
-//            });
-
+         path = intent.getStringExtra("path");
 
             final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -119,5 +101,69 @@ public class PostViewActivity extends AppCompatActivity {
                         }
                     });
         }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (Util.SDK_INT >= 24) {
+            FirebaseStorage.getInstance().getReference(path).getDownloadUrl()
+                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            initializePlayer(uri);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, "onVideoLoadFailure: ", e );
+                    Toast.makeText(PostViewActivity.this,"VideoLoadFailed",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT < 24) {
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT >= 24) {
+            releasePlayer();
+        }
+    }
+
+    private void initializePlayer(Uri uri){
+        DefaultTrackSelector trackSelector = new DefaultTrackSelector(this);
+        trackSelector.setParameters(
+                trackSelector.buildUponParameters().setMaxVideoSizeSd());
+        player = new SimpleExoPlayer.Builder(this).build();
+        videoView.setPlayer(player);
+        MediaSource mediaSource = buildMediaSource(uri);
+        player.setRepeatMode(Player.REPEAT_MODE_ONE);
+
+        player.setPlayWhenReady(playWhenReady);
+        player.seekTo(currentWindow, playbackPosition);
+        player.prepare(mediaSource, false, false);
+    }
+    private MediaSource buildMediaSource(Uri uri){
+        DataSource.Factory dataSourceFactory =
+                new DefaultDataSourceFactory(this, "MxClone");
+        ProgressiveMediaSource.Factory mediaSourceFactory = new ProgressiveMediaSource.Factory(dataSourceFactory);
+        return mediaSourceFactory.createMediaSource(uri);
+    }
+    private void releasePlayer() {
+        if (player != null) {
+            playWhenReady = player.getPlayWhenReady();
+            playbackPosition = player.getCurrentPosition();
+            currentWindow = player.getCurrentWindowIndex();
+            player.release();
+            player = null;
+        }
+    }
+
 }
